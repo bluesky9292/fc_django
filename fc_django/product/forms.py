@@ -10,7 +10,7 @@ class RegisterForm(forms.Form):
         error_messages={'required':'상품가격가격을 입력해주세요.'},
         label='상품가격'
     )
-    desctiption = forms.CharField(
+    description = forms.CharField(
         error_messages={'required':'상품설명을 입력해주세요.'},
         label='상품설명'
     )
@@ -25,14 +25,12 @@ class RegisterForm(forms.Form):
         price = cleaned_data.get('price')
         description = cleaned_data.get('description')
         stock = cleaned_data.get('stock')
-
-        if name and price and description and stock :
-            product = Product(
-                    name = name,
-                    price = price ,
-                    description = description,
-                    stock = stock, 
-                )
-            product.save()
+        print('===========>: ',description)
+        if not (name and price and description and stock ):
+            print('--------------------------------여기 오류')
+            self.add_error('name','값을 입력하세요.')
+            self.add_error('price','값을 입력하세요.')
+            self.add_error('stock','값을 입력하세요.')
+            
 
     
