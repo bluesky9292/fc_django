@@ -9,12 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -29,8 +29,79 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+BATON = {
+    'SITE_HEADER': '패스트캠퍼스 백오피스',
+    'SITE_TITLE': '패스트캠퍼스',
+    'INDEX_TITLE': '패스트캠퍼스 관리자',
+    'SUPPORT_HREF': 'https://recruit.ehyundai.com',
+    # 'SUPPORT_HREF': 'mailto:test@test.com',
+    'COPYRIGHT': 'copyright © 2022 bluesky', # noqa
+    'POWERED_BY': '<a href="https://www.fastcampus.co.kr">fastcampus</a>',
+    # 'CONFIRM_UNSAVED_CHANGES': True,
+    # 'SHOW_MULTIPART_UPLOADING': True,
+    # 'ENABLE_IMAGES_PREVIEW': True,
+    # 'CHANGELIST_FILTERS_IN_MODAL': True,
+    # 'CHANGELIST_FILTERS_ALWAYS_OPEN': False,
+    # 'CHANGELIST_FILTERS_FORM': True,
+    # 'MENU_ALWAYS_COLLAPSED': False,
+    'MENU_TITLE': '패스트캠퍼스',
+    # 'MESSAGES_TOASTS': False,
+    # 'GRAVATAR_DEFAULT_IMG': 'retro',
+    # 'LOGIN_SPLASH': '/static/core/img/login-splash.png',
+    # 'SEARCH_FIELD': {
+    #     'label': 'Search contents...',
+    #     'url': '/search/',
+    # },
+    'MENU': (
+        { 'type': 'title', 'label': 'main', 'apps': ('fcuser', 'product', 'order' ) },
+        {
+            'type': 'app',
+            'name': 'fcuser',
+            'label': '사용자',
+            'icon': 'fa fa-lock',
+            'models': (
+                {
+                    'name': 'fcuser',
+                    'label': '사용자'
+                },
+            )
+        },
+        {
+            'type': 'app',
+            'name': 'product',
+            'label': '상품',
+            'models': (
+                {
+                    'name': 'product',
+                    'label': '상품관리'
+                },
+            )
+        },
+        # {
+        #     'type': 'app',
+        #     'name': 'order',
+        #     'label': '주문',
+        #     'models': (
+        #         {
+        #             'name': 'order',
+        #             'label': '주문관리'
+        #         },
+        #     )
+        # },
+        { 'type': 'free', 'label': '주문', 'default_open': True, 'children': [
+            { 'type': 'model', 'label': '주문', 'name': 'order', 'app': 'order' },
+            { 'type': 'free', 'label': '날짜뷰', 'url': '/admin/order/order/date_view/' },
+        ] },
+        { 'type': 'free', 'label': '메뉴얼', 'url': '/admin/manual/' },
+    ),
+    # 'ANALYTICS': {
+    #     'CREDENTIALS': os.path.join(BASE_DIR, 'credentials.json'),
+    #     'VIEW_ID': '12345678',
+    # }
+}
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,9 +110,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'rest_framework',
-    'fcuser',
-    'product',
-    'order',
+    'fcuser.apps.FcuserConfig',
+    'product.apps.ProductConfig',
+    'order.apps.OrderConfig',
+    'baton.autodiscover',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +131,9 @@ ROOT_URLCONF = 'fc_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR,'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -108,9 +182,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
